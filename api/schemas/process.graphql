@@ -1,0 +1,6 @@
+type Process {
+    pid: Int!
+    name: String!
+    cpuUsage: Float!
+    memoryUsage: Float!
+}

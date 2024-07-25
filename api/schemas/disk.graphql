@@ -1,0 +1,9 @@
+type Disk {
+    total: Int!
+    used: Int!
+    free: Int!
+    readBytes: Int!
+    writeBytes: Int!
+    readOperations: Int!
+    writeOperations: Int!
+}

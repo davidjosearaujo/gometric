@@ -1,0 +1,5 @@
+type CPU {
+    usage: Float!
+    perCoreUsage: [Float!]!
+    loadAverage: [Float!]!
+}

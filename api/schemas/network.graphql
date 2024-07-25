@@ -1,0 +1,9 @@
+type Network {
+    interface: String!
+    sentBytes: Int!
+    receivedBytes: Int!
+    sentPackets: Int!
+    receivedPackets: Int!
+    errors: Int!
+    drops: Int!
+}

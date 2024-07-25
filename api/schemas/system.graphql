@@ -1,0 +1,10 @@
+type System {
+    uptime: Int!
+    cpu: CPU!
+    memory: Memory!
+    disks: [Disk!]!
+    networks: [Network!]!
+    processes: [Process!]!
+    temperature: [Float!]!
+    power: Power
+}

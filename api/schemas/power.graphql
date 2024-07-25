@@ -1,0 +1,4 @@
+type Power {
+    batteryLevel: Float!
+    status: String!
+}

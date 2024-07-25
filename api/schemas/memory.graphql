@@ -1,0 +1,9 @@
+type Memory {
+    total: Int!
+    used: Int!
+    free: Int!
+    buffers: Int!
+    cache: Int!
+    swapTotal: Int!
+    swapUsed: Int!
+}
