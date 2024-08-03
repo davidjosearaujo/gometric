@@ -69,7 +69,11 @@ type SystemMetrics struct {
 }
 
 func init() {
-	// TODO:
-	// - Define objects
-	// - Define resolvers
+	cpuType = graphql.NewObject(graphql.ObjectConfig{
+		Name:			"CPU",
+		Description:	"CPU metrics",
+		Fields: graphql.Fields{
+			// TODO
+		}
+	})
 }
