@@ -73,7 +73,13 @@ func init() {
 		Name:			"CPU",
 		Description:	"CPU metrics",
 		Fields: graphql.Fields{
-			// TODO
+			"usage": &graphql.Field{
+				Type: 			&graphql.Scalar,
+				Description:	"The total CPU usage percentage",
+				Resolve: 		func(p graphql.ResolveParams) (interface{}, error) {
+					// TODO
+				}
+			}
 		}
 	})
 }
