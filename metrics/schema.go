@@ -5,20 +5,19 @@ import (
 )
 
 var (
-	MetricsSchema graphql.Schema
+	MetricsSchema		graphql.Schema
 
-	cpuType           *graphql.Object
-	memoryType        *graphql.Object
-	diskType          *graphql.Object
-	networkType       *graphql.Object
-	processType       *graphql.Object
-	systemMetricsType *graphql.Object
+	cpuType           	*graphql.Object
+	memoryType        	*graphql.Object
+	diskType          	*graphql.Object
+	networkType       	*graphql.Object
+	processType       	*graphql.Object
+	systemMetricsType 	*graphql.Object
 )
 
 type CPU struct {
 	Usage        float64   `json:"usage"`
 	PerCoreUsage []float64 `json:"perCoreUsage"`
-	LoadAverage  []float64 `json:"loadAverage"`
 }
 
 type Memory struct {
@@ -73,13 +72,56 @@ func init() {
 		Name:			"CPU",
 		Description:	"CPU metrics",
 		Fields: graphql.Fields{
-			"usage": &graphql.Field{
-				Type: 			&graphql.Scalar,
+			"usage": 		&graphql.Field{
+				Type: 			graphql.Float,
 				Description:	"The total CPU usage percentage",
 				Resolve: 		func(p graphql.ResolveParams) (interface{}, error) {
-					// TODO
-				}
-			}
-		}
+					if cpu, ok := p.Source.(CPU); ok {
+						return cpu.Usage, nil
+					}
+					return nil, nil
+				},
+			},
+			"perCoreUsage":	&graphql.Field{
+				Type:			graphql.NewList(graphql.Float),
+				Description:	"CPU usage percentage per core",
+				Args:			graphql.FieldConfigArgument{
+					"number":	&graphql.ArgumentConfig{
+						Description: 	"Number of core",
+						Type: 			graphql.NewList(graphql.Int),
+					},
+				},
+				Resolve:		func(p graphql.ResolveParams) (interface{}, error) {
+					if cpu, ok := p.Source.(CPU); ok {
+						var result []float64
+
+						for _, index:= range p.Args["number"].([]interface{}) {
+							result = append(result, cpu.PerCoreUsage[index.(int)])
+						}
+
+						return result, nil
+					}
+					return nil, nil
+				},
+			},
+		},
+	})
+
+	queryType := graphql.NewObject(graphql.ObjectConfig{
+		Name:	"Query",
+		Fields:	graphql.Fields{
+			"cpu": &graphql.Field{
+				Type: cpuType,
+				Resolve: func(p graphql.ResolveParams) (interface{}, error) {
+					return CPU{
+						Usage: 5.6,
+						PerCoreUsage: []float64{5.3, 6.4}}, nil
+				},
+			},
+		},
+	})
+
+	MetricsSchema, _ = graphql.NewSchema(graphql.SchemaConfig{
+		Query: queryType,
 	})
 }
