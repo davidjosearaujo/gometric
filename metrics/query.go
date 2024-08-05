@@ -1,6 +1,9 @@
 package metrics
 
 import (
+	"fmt"
+
+	"github.com/elastic/go-sysinfo"
 	"github.com/graphql-go/graphql"
 )
 
@@ -17,14 +20,19 @@ func initQuery() {
 	queryType := graphql.NewObject(graphql.ObjectConfig{
 		Name: "Query",
 		Fields: graphql.Fields{
-			"cpu": &graphql.Field{
-				Type: cpuType,
+			"host": &graphql.Field{
+				Type: hostType,
 				Resolve: func(p graphql.ResolveParams) (interface{}, error) {
-					return CPU{
-						Usage:        5.6,
-						PerCoreUsage: []float64{5.3, 6.4}}, nil
+					host, _ := sysinfo.Host()
+					return host.Info(), nil
 				},
 			},
+			// "memory":	&graphql.Field{
+			// 	Type: memoryType,
+			// 	Resolve: func(p graphql.ResolveParams) (interface{}, error) {
+					
+			// 	},
+			// }
 		},
 	})
 
