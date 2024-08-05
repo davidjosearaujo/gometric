@@ -1,8 +1,8 @@
 package metrics
 
 import (
-	"github.com/graphql-go/graphql"
 	"github.com/elastic/go-sysinfo/types"
+	"github.com/graphql-go/graphql"
 )
 
 var (
@@ -16,6 +16,55 @@ var (
 )
 
 func initTypes() {
+	timeEnum := graphql.NewEnum(graphql.EnumConfig{
+		Name:        "Time",
+		Description: "One of the time windows for CPU usage",
+		Values: graphql.EnumValueConfigMap{
+			"ONE": &graphql.EnumValueConfig{
+				Value:       1,
+			},
+			"FIVE": &graphql.EnumValueConfig{
+				Value:       5,
+			},
+			"FIFTEEN": &graphql.EnumValueConfig{
+				Value:       15,
+			},
+		},
+	})
+
+	cpuType = graphql.NewObject(graphql.ObjectConfig{
+		Name: 		 "CPU",
+		Description: "CPU info",
+		Fields: graphql.Fields{
+			"load": &graphql.Field{
+				Type:        graphql.String,
+				Description: "Process hardware architecture",
+				Args: graphql.FieldConfigArgument{
+					"time": &graphql.ArgumentConfig{
+						Description: "There are three available time windows, 1, 5 and 15 minutes",
+						Type: timeEnum,
+					},
+				},
+				Resolve: func(p graphql.ResolveParams) (interface{}, error) {
+					if cpu, ok := p.Source.(CPU); ok {
+						if p.Args["time"] == 1 {
+							return cpu.Load.One, nil
+						}
+						if p.Args["time"] == 5 {
+							return cpu.Load.Five, nil
+						}
+						if p.Args["time"] == 15 {
+							return cpu.Load.Fifteen, nil
+						}
+						return *cpu.Load, nil
+					}
+					return nil, nil
+				},
+			},
+			
+		},
+	})
+
 	hostType = graphql.NewObject(graphql.ObjectConfig{
 		Name:        "Host",
 		Description: "Host info",
@@ -46,6 +95,16 @@ func initTypes() {
 				Resolve: func(p graphql.ResolveParams) (interface{}, error) {
 					if host, ok := p.Source.(types.HostInfo); ok {
 						return host.BootTime, nil
+					}
+					return nil, nil
+				},
+			},
+			"uptime": &graphql.Field{
+				Type:        graphql.String,
+				Description: "Host uptime",
+				Resolve: func(p graphql.ResolveParams) (interface{}, error) {
+					if host, ok := p.Source.(types.HostInfo); ok {
+						return host.Uptime().String(), nil
 					}
 					return nil, nil
 				},
@@ -143,6 +202,82 @@ func initTypes() {
 		},
 	})
 
-	
+	memoryType = graphql.NewObject(graphql.ObjectConfig{
+		Name:        "Memory",
+		Description: "Host memory info",
+		Fields: graphql.Fields{
+			"total": &graphql.Field{
+				Type:        graphql.NewNonNull(graphql.String),
+				Description: "Total physical memory in bytes",
+				Resolve: func(p graphql.ResolveParams) (interface{}, error) {
+					if mem, ok := p.Source.(types.HostMemoryInfo); ok {
+						return mem.Total, nil
+					}
+					return nil, nil
+				},
+			},
+			"used": &graphql.Field{
+				Type:        graphql.NewNonNull(graphql.String),
+				Description: "Total used memory in bytes",
+				Resolve: func(p graphql.ResolveParams) (interface{}, error) {
+					if mem, ok := p.Source.(types.HostMemoryInfo); ok {
+						return mem.Used, nil
+					}
+					return nil, nil
+				},
+			},
+			"available": &graphql.Field{
+				Type:        graphql.NewNonNull(graphql.String),
+				Description: "Amount of memory available without swapping in bytes",
+				Resolve: func(p graphql.ResolveParams) (interface{}, error) {
+					if mem, ok := p.Source.(types.HostMemoryInfo); ok {
+						return mem.Available, nil
+					}
+					return nil, nil
+				},
+			},
+			"free": &graphql.Field{
+				Type:        graphql.NewNonNull(graphql.String),
+				Description: "Amount of memory not used by the system in bytes",
+				Resolve: func(p graphql.ResolveParams) (interface{}, error) {
+					if mem, ok := p.Source.(types.HostMemoryInfo); ok {
+						return mem.Free, nil
+					}
+					return nil, nil
+				},
+			},
+			"virtualTotal": &graphql.Field{
+				Type:        graphql.NewNonNull(graphql.String),
+				Description: "Total virtual memory in bytes",
+				Resolve: func(p graphql.ResolveParams) (interface{}, error) {
+					if mem, ok := p.Source.(types.HostMemoryInfo); ok {
+						return mem.VirtualTotal, nil
+					}
+					return nil, nil
+				},
+			},
+			"virtualUsed": &graphql.Field{
+				Type:        graphql.NewNonNull(graphql.String),
+				Description: "Total used virtual memory in bytes",
+				Resolve: func(p graphql.ResolveParams) (interface{}, error) {
+					if mem, ok := p.Source.(types.HostMemoryInfo); ok {
+						return mem.VirtualUsed, nil
+					}
+					return nil, nil
+				},
+			},
+			"virtualFree": &graphql.Field{
+				Type:        graphql.NewNonNull(graphql.String),
+				Description: "Virtual memory that is not used in bytes",
+				Resolve: func(p graphql.ResolveParams) (interface{}, error) {
+					if mem, ok := p.Source.(types.HostMemoryInfo); ok {
+						return mem.VirtualFree, nil
+					}
+					return nil, nil
+				},
+			},
+		},
+	})
+
 
 }

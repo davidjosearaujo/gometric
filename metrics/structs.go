@@ -1,18 +1,12 @@
 package metrics
 
-type CPU struct {
-	Usage        float64   `json:"usage"`
-	PerCoreUsage []float64 `json:"perCoreUsage"`
-}
+import (
+	"github.com/elastic/go-sysinfo/types"
+)
 
-type Memory struct {
-	Total     uint64 `json:"total"`
-	Used      uint64 `json:"used"`
-	Free      uint64 `json:"free"`
-	Cached    uint64 `json:"cached"`
-	SwapTotal uint64 `json:"swapTotal"`
-	SwapUsed  uint64 `json:"swapUsed"`
-	SwapFree  uint64 `json:"swapFree"`
+type CPU struct {
+	Time		types.CPUTimes
+	Load		*types.LoadAverageInfo
 }
 
 type Disk struct {
@@ -42,12 +36,4 @@ type Process struct {
 	CPUUsage    float64 `json:"cpuUsage"`
 	MemoryUsage uint64  `json:"memoryUsage"`
 	StartTime   int64   `json:"startTime"`
-}
-
-type SystemMetrics struct {
-	CPU       CPU       `json:"cpu"`
-	Memory    Memory    `json:"memory"`
-	Disk      []Disk    `json:"disk"`
-	Network   []Network `json:"network"`
-	Processes []Process `json:"processes"`
 }
