@@ -29,9 +29,10 @@ func initQuery() {
 			"cpu": &graphql.Field{
 				Type: cpuType,
 				Resolve: func(p graphql.ResolveParams) (interface{}, error) {
-					host, _ := sysinfo.Host()
 					var cpu CPU
-
+					
+					host, _ := sysinfo.Host()
+					
 					if load, ok := host.(types.LoadAverage); ok {
 						cpu.Load, _ = load.LoadAverage()
 					}

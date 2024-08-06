@@ -1,6 +1,8 @@
 package metrics
 
 import (
+	"reflect"
+
 	"github.com/elastic/go-sysinfo/types"
 	"github.com/graphql-go/graphql"
 )
@@ -17,7 +19,7 @@ var (
 
 func initTypes() {
 	timeEnum := graphql.NewEnum(graphql.EnumConfig{
-		Name:        "Time",
+		Name:        "Time window",
 		Description: "One of the time windows for CPU usage",
 		Values: graphql.EnumValueConfigMap{
 			"ONE": &graphql.EnumValueConfig{
@@ -28,6 +30,37 @@ func initTypes() {
 			},
 			"FIFTEEN": &graphql.EnumValueConfig{
 				Value:       15,
+			},
+		},
+	})
+
+	cpuTimesEnum := graphql.NewEnum(graphql.EnumConfig{
+		Name:		"Time stats",
+		Description: "CPU timing stats for a process",
+		Values: graphql.EnumValueConfigMap{
+			"USER": &graphql.EnumValueConfig{
+				Value:		"User",
+			},
+			"System": &graphql.EnumValueConfig{
+				Value:		"System",
+			},
+			"IDLE": &graphql.EnumValueConfig{
+				Value:		"Idle",
+			},
+			"IOWAIT": &graphql.EnumValueConfig{
+				Value:		"IOWait",
+			},
+			"IRQ": &graphql.EnumValueConfig{
+				Value:		"IRQ",
+			},
+			"NICE": &graphql.EnumValueConfig{
+				Value:		"Nice",
+			},
+			"SOFTIRQ": &graphql.EnumValueConfig{
+				Value:		"SoftIRQ",
+			},
+			"STEAL": &graphql.EnumValueConfig{
+				Value:		"Steal",
 			},
 		},
 	})
@@ -61,7 +94,23 @@ func initTypes() {
 					return nil, nil
 				},
 			},
-			
+			"times": &graphql.Field{
+				Type: 			graphql.String,
+				Description: 	"CPU times",
+				Args: graphql.FieldConfigArgument{
+					"stat": &graphql.ArgumentConfig{
+						Description: "Timing stats",
+						Type: cpuTimesEnum,
+					},
+				},
+				Resolve: func(p graphql.ResolveParams) (interface{}, error) {
+					if cpu, ok := p.Source.(CPU); ok{
+						return reflect.ValueOf(cpu.Time).FieldByName(p.Args["stat"].(string)), nil
+					}
+					return nil, nil
+				},
+			},
+		
 		},
 	})
 
