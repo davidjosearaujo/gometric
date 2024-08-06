@@ -1,6 +1,8 @@
 package metrics
 
 import (
+	"runtime"
+
 	"github.com/elastic/go-sysinfo"
 	"github.com/elastic/go-sysinfo/types"
 	"github.com/graphql-go/graphql"
@@ -31,16 +33,17 @@ func initQuery() {
 				Resolve: func(p graphql.ResolveParams) (interface{}, error) {
 					host, _ := sysinfo.Host()
 					var cpu CPU
-
+					
+					// CPU Load
 					if load, ok := host.(types.LoadAverage); ok {
 						cpu.Load, _ = load.LoadAverage()
 					}
 
+					// CPU timers
 					cpu.Time, _ = host.CPUTime()
 
-					// TODO:
-					//	- Add fields with core count
-					//  - Add field with core number
+					// CPU Number of cores
+					cpu.CoreCount = int16(runtime.NumCPU())
 
 					return cpu, nil
 				},
@@ -53,11 +56,20 @@ func initQuery() {
 					return *memory, nil
 				},
 			},
-			// "network": &graphql.Field{
-			// 	Type: networkType,
-			// 	Resolve: func(p graphql.ResolveParams) (interface{}, error) {
-			// 	},
-			// },
+			"network": &graphql.Field{
+				Type: networkType,
+				Resolve: func(p graphql.ResolveParams) (interface{}, error) {
+					var net Network
+					host, _ := sysinfo.Host()
+
+					if n, ok := host.(types.NetworkCounters); ok {
+						netcounter, _ := n.NetworkCounters()
+						net.Network = *netcounter
+					}
+
+					return net, nil
+				},
+			},
 		},
 	})
 

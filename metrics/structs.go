@@ -7,6 +7,7 @@ import (
 type CPU struct {
 	Time		types.CPUTimes
 	Load		*types.LoadAverageInfo
+	CoreCount	int16
 }
 
 type Disk struct {
@@ -19,15 +20,7 @@ type Disk struct {
 }
 
 type Network struct {
-	InterfaceName string `json:"interfaceName"`
-	BytesSent     uint64 `json:"bytesSent"`
-	BytesRecv     uint64 `json:"bytesRecv"`
-	PacketsSent   uint64 `json:"packetsSent"`
-	PacketsRecv   uint64 `json:"packetsRecv"`
-	ErrIn         uint64 `json:"errIn"`
-	ErrOut        uint64 `json:"errOut"`
-	DropIn        uint64 `json:"dropIn"`
-	DropOut       uint64 `json:"dropOut"`
+	Network		types.NetworkCountersInfo
 }
 
 type Process struct {
