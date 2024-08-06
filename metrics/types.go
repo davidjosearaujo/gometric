@@ -8,13 +8,13 @@ import (
 )
 
 var (
-	hostType          *graphql.Object
-	cpuType           *graphql.Object
-	memoryType        *graphql.Object
-	diskType          *graphql.Object
-	networkType       *graphql.Object
-	processType       *graphql.Object
-	systemMetricsType *graphql.Object
+	hostType    *graphql.Object
+	osType      *graphql.Object
+	cpuType     *graphql.Object
+	memoryType  *graphql.Object
+	diskType    *graphql.Object
+	networkType *graphql.Object
+	processType *graphql.Object
 )
 
 func initTypes() {
@@ -454,4 +454,126 @@ func initTypes() {
 			},
 		},
 	})
+
+	osType = graphql.NewObject(graphql.ObjectConfig{
+		Name:        "OS",
+		Description: "Host OS info",
+		Fields: graphql.Fields{
+			"type": &graphql.Field{
+				Type:        graphql.String,
+				Description: "OS Type (one of linux, macos, unix, windows)",
+				Resolve: func(p graphql.ResolveParams) (interface{}, error) {
+					if os, ok := p.Source.(types.OSInfo); ok {
+						return os.Type, nil
+					}
+					return nil, nil
+				},
+			},
+			"family": &graphql.Field{
+				Type:        graphql.String,
+				Description: "OS Family (e.g. redhat, debian, freebsd, windows)",
+				Resolve: func(p graphql.ResolveParams) (interface{}, error) {
+					if os, ok := p.Source.(types.OSInfo); ok {
+						return os.Family, nil
+					}
+					return nil, nil
+				},
+			},
+			"platform": &graphql.Field{
+				Type:        graphql.String,
+				Description: "OS platform (e.g. centos, ubuntu, windows)",
+				Resolve: func(p graphql.ResolveParams) (interface{}, error) {
+					if os, ok := p.Source.(types.OSInfo); ok {
+						return os.Platform, nil
+					}
+					return nil, nil
+				},
+			},
+			"name": &graphql.Field{
+				Type:        graphql.String,
+				Description: "OS Name (e.g. Mac OS X, CentOS)",
+				Resolve: func(p graphql.ResolveParams) (interface{}, error) {
+					if os, ok := p.Source.(types.OSInfo); ok {
+						return os.Name, nil
+					}
+					return nil, nil
+				},
+			},
+			"version": &graphql.Field{
+				Type:        graphql.String,
+				Description: "OS version (e.g. 10.12.6)",
+				Resolve: func(p graphql.ResolveParams) (interface{}, error) {
+					if os, ok := p.Source.(types.OSInfo); ok {
+						return os.Version, nil
+					}
+					return nil, nil
+				},
+			},
+			"major": &graphql.Field{
+				Type:        graphql.String,
+				Description: "Major release version",
+				Resolve: func(p graphql.ResolveParams) (interface{}, error) {
+					if os, ok := p.Source.(types.OSInfo); ok {
+						return os.Major, nil
+					}
+					return nil, nil
+				},
+			},
+			"minor": &graphql.Field{
+				Type:        graphql.String,
+				Description: "Minor release version",
+				Resolve: func(p graphql.ResolveParams) (interface{}, error) {
+					if os, ok := p.Source.(types.OSInfo); ok {
+						return os.Minor, nil
+					}
+					return nil, nil
+				},
+			},
+			"patch": &graphql.Field{
+				Type:        graphql.String,
+				Description: "Patch release version",
+				Resolve: func(p graphql.ResolveParams) (interface{}, error) {
+					if os, ok := p.Source.(types.OSInfo); ok {
+						return os.Patch, nil
+					}
+					return nil, nil
+				},
+			},
+			"build": &graphql.Field{
+				Type:        graphql.String,
+				Description: "Build (e.g. 16G1114)",
+				Resolve: func(p graphql.ResolveParams) (interface{}, error) {
+					if os, ok := p.Source.(types.OSInfo); ok {
+						return os.Build, nil
+					}
+					return nil, nil
+				},
+			},
+			"codename": &graphql.Field{
+				Type:        graphql.String,
+				Description: "OS codename (e.g. jessie)",
+				Resolve: func(p graphql.ResolveParams) (interface{}, error) {
+					if os, ok := p.Source.(types.OSInfo); ok {
+						return os.Codename, nil
+					}
+					return nil, nil
+				},
+			},
+		},
+	})
+
+	// diskType = graphql.NewObject(graphql.ObjectConfig{
+	// 	Name:        "Disk",
+	// 	Description: "Disk info",
+	// 	Fields: graphql.Fields{
+	// 		"usage": &graphql.Field{
+	// 			Type:        graphql.String,
+	// 			Description: "",
+	// 			Resolve: func(p graphql.ResolveParams) (interface{}, error) {
+					
+	// 				return nil, nil
+	// 			},
+	// 		},
+	// 	},
+	// })
 }

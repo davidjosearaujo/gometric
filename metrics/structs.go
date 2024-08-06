@@ -2,21 +2,22 @@ package metrics
 
 import (
 	"github.com/elastic/go-sysinfo/types"
+	"github.com/shirou/gopsutil/cpu"
+	"github.com/shirou/gopsutil/disk"
 )
 
 type CPU struct {
+	Info      cpu.InfoStat // TODO
 	Time      types.CPUTimes
 	Load      *types.LoadAverageInfo
 	CoreCount int16
 }
 
+// TODO
 type Disk struct {
-	Total       uint64 `json:"total"`
-	Used        uint64 `json:"used"`
-	Free        uint64 `json:"free"`
-	InodesTotal uint64 `json:"inodesTotal"`
-	InodesUsed  uint64 `json:"inodesUsed"`
-	InodesFree  uint64 `json:"inodesFree"`
+	Partitions     []disk.PartitionStat
+	IOCountersStat map[string]disk.IOCountersStat
+	UsageStat      map[string]disk.UsageStat
 }
 
 type Network struct {

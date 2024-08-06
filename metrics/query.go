@@ -6,6 +6,7 @@ import (
 	"github.com/elastic/go-sysinfo"
 	"github.com/elastic/go-sysinfo/types"
 	"github.com/graphql-go/graphql"
+	"github.com/shirou/gopsutil/disk"
 )
 
 var (
@@ -26,6 +27,15 @@ func initQuery() {
 				Resolve: func(p graphql.ResolveParams) (interface{}, error) {
 					host, _ := sysinfo.Host()
 					return host.Info(), nil
+				},
+			},
+			"os": &graphql.Field{
+				Type: osType,
+				Resolve: func(p graphql.ResolveParams) (interface{}, error) {
+					host, _ := sysinfo.Host()
+					hostinfo := host.Info()
+					os := *hostinfo.OS
+					return os, nil
 				},
 			},
 			"cpu": &graphql.Field{
@@ -59,17 +69,24 @@ func initQuery() {
 			"network": &graphql.Field{
 				Type: networkType,
 				Resolve: func(p graphql.ResolveParams) (interface{}, error) {
-					var net Network
+					var network Network
 					host, _ := sysinfo.Host()
 
 					if n, ok := host.(types.NetworkCounters); ok {
 						netcounter, _ := n.NetworkCounters()
-						net.Network = *netcounter
+						network.Network = *netcounter
 					}
 
-					return net, nil
+					return network, nil
 				},
 			},
+			// "disk": &graphql.Field{
+			// 	Type: diskType,
+			// 	Resolve: func(p graphql.ResolveParams) (interface{}, error) {
+					
+			// 		
+			// 	},
+			// },
 		},
 	})
 
