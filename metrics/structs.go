@@ -5,9 +5,9 @@ import (
 )
 
 type CPU struct {
-	Time		types.CPUTimes
-	Load		*types.LoadAverageInfo
-	CoreCount	int16
+	Time      types.CPUTimes
+	Load      *types.LoadAverageInfo
+	CoreCount int16
 }
 
 type Disk struct {
@@ -20,7 +20,7 @@ type Disk struct {
 }
 
 type Network struct {
-	Network		types.NetworkCountersInfo
+	Network types.NetworkCountersInfo
 }
 
 type Process struct {

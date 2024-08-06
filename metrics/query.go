@@ -33,7 +33,7 @@ func initQuery() {
 				Resolve: func(p graphql.ResolveParams) (interface{}, error) {
 					host, _ := sysinfo.Host()
 					var cpu CPU
-					
+
 					// CPU Load
 					if load, ok := host.(types.LoadAverage); ok {
 						cpu.Load, _ = load.LoadAverage()

@@ -377,8 +377,8 @@ func initTypes() {
 		Description: "Host network info",
 		Fields: graphql.Fields{
 			"netstat": &graphql.Field{
-				Type:			graphql.String,
-				Description: 	"Netstat",
+				Type:        graphql.String,
+				Description: "Netstat",
 				Args: graphql.FieldConfigArgument{
 					"protocol": &graphql.ArgumentConfig{
 						Description: "Either IP or TCP",
@@ -397,7 +397,6 @@ func initTypes() {
 							data = net.Network.Netstat.IPExt
 						case "TCP":
 							data = net.Network.Netstat.TCPExt
-						
 						default:
 							return nil, nil
 						}
@@ -408,12 +407,12 @@ func initTypes() {
 							return data[p.Args["counter"].(string)], nil
 						}
 					}
-					return nil,nil
+					return nil, nil
 				},
 			},
 			"snmp": &graphql.Field{
-				Type:			graphql.String,
-				Description: 	"SNMP",
+				Type:        graphql.String,
+				Description: "SNMP",
 				Args: graphql.FieldConfigArgument{
 					"protocol": &graphql.ArgumentConfig{
 						Description: "Either IP, ICMP, ICMPMsg, TCP, UDP, UDPLite",
@@ -450,7 +449,7 @@ func initTypes() {
 							return data[p.Args["counter"].(string)], nil
 						}
 					}
-					return nil,nil
+					return nil, nil
 				},
 			},
 		},
