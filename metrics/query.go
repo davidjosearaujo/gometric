@@ -6,7 +6,7 @@ import (
 	"github.com/elastic/go-sysinfo"
 	"github.com/elastic/go-sysinfo/types"
 	"github.com/graphql-go/graphql"
-	"github.com/shirou/gopsutil/disk"
+	"github.com/shirou/gopsutil/cpu"
 )
 
 var (
@@ -42,20 +42,22 @@ func initQuery() {
 				Type: cpuType,
 				Resolve: func(p graphql.ResolveParams) (interface{}, error) {
 					host, _ := sysinfo.Host()
-					var cpu CPU
+					var cpuObj CPU
 
 					// CPU Load
 					if load, ok := host.(types.LoadAverage); ok {
-						cpu.Load, _ = load.LoadAverage()
+						cpuObj.Load, _ = load.LoadAverage()
 					}
 
 					// CPU timers
-					cpu.Time, _ = host.CPUTime()
+					cpuObj.Time, _ = host.CPUTime()
+
+					cpuObj.Info, _ = cpu.Info()
 
 					// CPU Number of cores
-					cpu.CoreCount = int16(runtime.NumCPU())
+					cpuObj.CoreCount = int16(runtime.NumCPU())
 
-					return cpu, nil
+					return cpuObj, nil
 				},
 			},
 			"memory": &graphql.Field{
@@ -80,11 +82,12 @@ func initQuery() {
 					return network, nil
 				},
 			},
+			// TODO
 			// "disk": &graphql.Field{
 			// 	Type: diskType,
 			// 	Resolve: func(p graphql.ResolveParams) (interface{}, error) {
-					
-			// 		
+
+			//
 			// 	},
 			// },
 		},

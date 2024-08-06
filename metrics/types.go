@@ -12,7 +12,7 @@ var (
 	osType      *graphql.Object
 	cpuType     *graphql.Object
 	memoryType  *graphql.Object
-	diskType    *graphql.Object
+	diskType    *graphql.Object // TODO
 	networkType *graphql.Object
 	processType *graphql.Object
 )
@@ -119,7 +119,7 @@ func initTypes() {
 				Resolve: func(p graphql.ResolveParams) (interface{}, error) {
 					if cpu, ok := p.Source.(CPU); ok {
 						if p.Args["time"] != nil {
-							return reflect.ValueOf(cpu.Load).FieldByName(p.Args["time"].(string)), nil
+							return reflect.ValueOf(*cpu.Load).FieldByName(p.Args["time"].(string)), nil
 						}
 						return *cpu.Load, nil
 					}
@@ -151,6 +151,16 @@ func initTypes() {
 				Resolve: func(p graphql.ResolveParams) (interface{}, error) {
 					if cpu, ok := p.Source.(CPU); ok {
 						return cpu.CoreCount, nil
+					}
+					return nil, nil
+				},
+			},
+			"info": &graphql.Field{
+				Type:        graphql.String,
+				Description: "Overall CPU info",
+				Resolve: func(p graphql.ResolveParams) (interface{}, error) {
+					if cpu, ok := p.Source.(CPU); ok {
+						return cpu.Info, nil
 					}
 					return nil, nil
 				},
@@ -570,7 +580,7 @@ func initTypes() {
 	// 			Type:        graphql.String,
 	// 			Description: "",
 	// 			Resolve: func(p graphql.ResolveParams) (interface{}, error) {
-					
+
 	// 				return nil, nil
 	// 			},
 	// 		},

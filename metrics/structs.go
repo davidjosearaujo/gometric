@@ -7,7 +7,7 @@ import (
 )
 
 type CPU struct {
-	Info      cpu.InfoStat // TODO
+	Info      []cpu.InfoStat
 	Time      types.CPUTimes
 	Load      *types.LoadAverageInfo
 	CoreCount int16
