@@ -2,7 +2,6 @@ package main
 
 import (
 	"encoding/json"
-	"fmt"
 	"net/http"
 
 	"github.com/davidjosearaujo/gometric/metrics"
@@ -10,7 +9,9 @@ import (
 )
 
 func main() {
-	http.HandleFunc("/graphql", func(w http.ResponseWriter, r *http.Request) {
+
+	mux := http.NewServeMux()
+	mux.HandleFunc("/graphql", func(w http.ResponseWriter, r *http.Request) {
 		query := r.URL.Query().Get("query")
 		result := graphql.Do(graphql.Params{
 			Schema:        metrics.MetricsSchema,
@@ -18,7 +19,11 @@ func main() {
 		})
 		json.NewEncoder(w).Encode(result)
 	})
-	fmt.Println("Now server is running on port 8080")
-	fmt.Println("Test with Get      : curl -g 'http://localhost:8080/graphql?query={hero{name}}'")
-	http.ListenAndServe(":8080", nil)
+
+	server := &http.Server{
+		Addr:    ":7000",
+		Handler: mux,
+	}
+
+	server.ListenAndServe()
 }

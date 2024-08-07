@@ -86,10 +86,28 @@ func initQuery() {
 			// TODO
 			"disk": &graphql.Field{
 				Type: diskType,
+				Args: graphql.FieldConfigArgument{
+					"device": &graphql.ArgumentConfig{
+						Type:        graphql.String,
+						Description: "Name of the device",
+					},
+				},
 				Resolve: func(p graphql.ResolveParams) (interface{}, error) {
 					var diskObj Disk
-
 					diskObj.Partitions, _ = disk.Partitions(false)
+
+					if p.Args["device"] != nil {
+						diskObj.Partitions, _ = disk.Partitions(false)
+						for _, partition := range diskObj.Partitions {
+							if partition.Device == p.Args["device"] {
+								diskObj.Partitions = []disk.PartitionStat{partition}
+								break
+							}
+						}
+
+						tempUsageStat, _ := disk.Usage(diskObj.Partitions[0].Mountpoint)
+						diskObj.UsageStat = *tempUsageStat
+					}
 
 					return diskObj, nil
 				},

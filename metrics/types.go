@@ -103,6 +103,19 @@ func initTypes() {
 		},
 	})
 
+	modeEnum := graphql.NewEnum(graphql.EnumConfig{
+		Name:        "Mode",
+		Description: "Either in bytes or percentage",
+		Values: graphql.EnumValueConfigMap{
+			"BYTES": &graphql.EnumValueConfig{
+				Value: false,
+			},
+			"PERCENT": &graphql.EnumValueConfig{
+				Value: true,
+			},
+		},
+	})
+
 	cpuType = graphql.NewObject(graphql.ObjectConfig{
 		Name:        "CPU",
 		Description: "CPU info",
@@ -578,22 +591,128 @@ func initTypes() {
 		Fields: graphql.Fields{
 			"devices": &graphql.Field{
 				Type:        graphql.NewList(graphql.String),
-				Description: "",
+				Description: "List of devices",
 				Resolve: func(p graphql.ResolveParams) (interface{}, error) {
 					if disk, ok := p.Source.(Disk); ok {
 						var devices []string
-
 						for _, device := range disk.Partitions {
 							devices = append(devices, device.Device)
 						}
-
 						return devices, nil
 					}
 					return nil, nil
 				},
 			},
-			// TODO
-			// - Per device info
+			"fstype": &graphql.Field{
+				Type:        graphql.String,
+				Description: "Filesystem type",
+				Resolve: func(p graphql.ResolveParams) (interface{}, error) {
+					if disk, ok := p.Source.(Disk); ok {
+						return disk.UsageStat.Fstype, nil
+					}
+					return nil, nil
+				},
+			},
+			"mountpoint": &graphql.Field{
+				Type:        graphql.String,
+				Description: "Filesystem type",
+				Resolve: func(p graphql.ResolveParams) (interface{}, error) {
+					if disk, ok := p.Source.(Disk); ok {
+						return disk.Partitions[0].Mountpoint, nil
+					}
+					return nil, nil
+				},
+			},
+			"opts": &graphql.Field{
+				Type:        graphql.String,
+				Description: "Filesystem type",
+				Resolve: func(p graphql.ResolveParams) (interface{}, error) {
+					if disk, ok := p.Source.(Disk); ok {
+						return disk.Partitions[0].Opts, nil
+					}
+					return nil, nil
+				},
+			},
+			"total": &graphql.Field{
+				Type:        graphql.String,
+				Description: "Total storage space",
+				Resolve: func(p graphql.ResolveParams) (interface{}, error) {
+					if disk, ok := p.Source.(Disk); ok {
+						return disk.UsageStat.Total, nil
+					}
+					return nil, nil
+				},
+			},
+			"free": &graphql.Field{
+				Type:        graphql.String,
+				Description: "Free storage space",
+				Resolve: func(p graphql.ResolveParams) (interface{}, error) {
+					if disk, ok := p.Source.(Disk); ok {
+						return disk.UsageStat.Free, nil
+					}
+					return nil, nil
+				},
+			},
+			"used": &graphql.Field{
+				Type:        graphql.String,
+				Description: "Used storage space",
+				Args: graphql.FieldConfigArgument{
+					"mode": &graphql.ArgumentConfig{
+						Type:        modeEnum,
+						Description: "Either in BYTES or PERCENT",
+						DefaultValue: false,
+					},
+				},
+				Resolve: func(p graphql.ResolveParams) (interface{}, error) {
+					if disk, ok := p.Source.(Disk); ok {
+						if p.Args["mode"].(bool) {
+							return disk.UsageStat.UsedPercent, nil
+						}
+						return disk.UsageStat.Used, nil
+					}
+					return nil, nil
+				},
+			},
+			"inodestotal": &graphql.Field{
+				Type:        graphql.String,
+				Description: "Total inodes",
+				Resolve: func(p graphql.ResolveParams) (interface{}, error) {
+					if disk, ok := p.Source.(Disk); ok {
+						return disk.UsageStat.InodesTotal, nil
+					}
+					return nil, nil
+				},
+			},
+			"inodesused": &graphql.Field{
+				Type:        graphql.String,
+				Description: "Used inodes",
+				Args: graphql.FieldConfigArgument{
+					"mode": &graphql.ArgumentConfig{
+						Type:        modeEnum,
+						Description: "Either in BYTES or PERCENT",
+						DefaultValue: false,
+					},
+				},
+				Resolve: func(p graphql.ResolveParams) (interface{}, error) {
+					if disk, ok := p.Source.(Disk); ok {
+						if p.Args["mode"].(bool) {
+							return disk.UsageStat.InodesUsedPercent, nil
+						}
+						return disk.UsageStat.InodesUsed, nil
+					}
+					return nil, nil
+				},
+			},
+			"inodesfree": &graphql.Field{
+				Type:        graphql.String,
+				Description: "Free inodes",
+				Resolve: func(p graphql.ResolveParams) (interface{}, error) {
+					if disk, ok := p.Source.(Disk); ok {
+						return disk.UsageStat.InodesFree, nil
+					}
+					return nil, nil
+				},
+			},
 		},
 	})
 }

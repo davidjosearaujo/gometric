@@ -13,11 +13,9 @@ type CPU struct {
 	CoreCount int16
 }
 
-// TODO
 type Disk struct {
 	Partitions     []disk.PartitionStat
-	IOCountersStat map[string]disk.IOCountersStat
-	UsageStat      map[string]disk.UsageStat
+	UsageStat      disk.UsageStat
 }
 
 type Network struct {
