@@ -572,18 +572,28 @@ func initTypes() {
 		},
 	})
 
-	// diskType = graphql.NewObject(graphql.ObjectConfig{
-	// 	Name:        "Disk",
-	// 	Description: "Disk info",
-	// 	Fields: graphql.Fields{
-	// 		"usage": &graphql.Field{
-	// 			Type:        graphql.String,
-	// 			Description: "",
-	// 			Resolve: func(p graphql.ResolveParams) (interface{}, error) {
+	diskType = graphql.NewObject(graphql.ObjectConfig{
+		Name:        "Disk",
+		Description: "Disk info",
+		Fields: graphql.Fields{
+			"devices": &graphql.Field{
+				Type:        graphql.NewList(graphql.String),
+				Description: "",
+				Resolve: func(p graphql.ResolveParams) (interface{}, error) {
+					if disk, ok := p.Source.(Disk); ok {
+						var devices []string
 
-	// 				return nil, nil
-	// 			},
-	// 		},
-	// 	},
-	// })
+						for _, device := range disk.Partitions {
+							devices = append(devices, device.Device)
+						}
+
+						return devices, nil
+					}
+					return nil, nil
+				},
+			},
+			// TODO
+			// - Per device info
+		},
+	})
 }

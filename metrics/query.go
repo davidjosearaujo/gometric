@@ -7,6 +7,7 @@ import (
 	"github.com/elastic/go-sysinfo/types"
 	"github.com/graphql-go/graphql"
 	"github.com/shirou/gopsutil/cpu"
+	"github.com/shirou/gopsutil/disk"
 )
 
 var (
@@ -83,13 +84,16 @@ func initQuery() {
 				},
 			},
 			// TODO
-			// "disk": &graphql.Field{
-			// 	Type: diskType,
-			// 	Resolve: func(p graphql.ResolveParams) (interface{}, error) {
+			"disk": &graphql.Field{
+				Type: diskType,
+				Resolve: func(p graphql.ResolveParams) (interface{}, error) {
+					var diskObj Disk
 
-			//
-			// 	},
-			// },
+					diskObj.Partitions, _ = disk.Partitions(false)
+
+					return diskObj, nil
+				},
+			},
 		},
 	})
 
