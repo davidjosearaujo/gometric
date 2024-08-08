@@ -1,8 +1,14 @@
 # Gometric
 
+![build](https://github.com/davidjosearaujo/gometric/actions/workflows/go.yml/badge.svg)
+
 ## Overview
 
 This project is a metrics server built with Go that collects system metrics and exposes them via a GraphQL API. It includes support for CPU, memory, disk, network, and process metrics. Deployment can be automated using Terraform and Ansible.
+
+![image](https://img.shields.io/badge/Go-00ADD8?style=for-the-badge&logo=go&logoColor=white)
+![image](https://img.shields.io/badge/GraphQl-E10098?style=for-the-badge&logo=graphql&logoColor=white)
+![image](https://img.shields.io/badge/Terraform-7B42BC?style=for-the-badge&logo=terraform&logoColor=white)
 
 ## Features
 
