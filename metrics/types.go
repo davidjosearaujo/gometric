@@ -121,7 +121,7 @@ func initTypes() {
 		Description: "CPU info",
 		Fields: graphql.Fields{
 			"load": &graphql.Field{
-				Type:        graphql.String,
+				Type:        graphql.NewNonNull(graphql.String),
 				Description: "Process hardware architecture",
 				Args: graphql.FieldConfigArgument{
 					"time": &graphql.ArgumentConfig{
@@ -140,7 +140,7 @@ func initTypes() {
 				},
 			},
 			"times": &graphql.Field{
-				Type:        graphql.String,
+				Type:        graphql.NewNonNull(graphql.String),
 				Description: "Timing stats for a process",
 				Args: graphql.FieldConfigArgument{
 					"stat": &graphql.ArgumentConfig{
@@ -159,7 +159,7 @@ func initTypes() {
 				},
 			},
 			"cores": &graphql.Field{
-				Type:        graphql.Int,
+				Type:        graphql.NewNonNull(graphql.Int),
 				Description: "Number of cores in the CPU",
 				Resolve: func(p graphql.ResolveParams) (interface{}, error) {
 					if cpu, ok := p.Source.(CPU); ok {
@@ -169,7 +169,7 @@ func initTypes() {
 				},
 			},
 			"info": &graphql.Field{
-				Type:        graphql.String,
+				Type:        graphql.NewNonNull(graphql.String),
 				Description: "Overall CPU info",
 				Resolve: func(p graphql.ResolveParams) (interface{}, error) {
 					if cpu, ok := p.Source.(CPU); ok {
@@ -186,7 +186,7 @@ func initTypes() {
 		Description: "Host info",
 		Fields: graphql.Fields{
 			"architecture": &graphql.Field{
-				Type:        graphql.String,
+				Type:        graphql.NewNonNull(graphql.String),
 				Description: "Process hardware architecture",
 				Resolve: func(p graphql.ResolveParams) (interface{}, error) {
 					if host, ok := p.Source.(types.HostInfo); ok {
@@ -196,7 +196,7 @@ func initTypes() {
 				},
 			},
 			"nativeArchitecture": &graphql.Field{
-				Type:        graphql.String,
+				Type:        graphql.NewNonNull(graphql.String),
 				Description: "Native OS hardware architecture",
 				Resolve: func(p graphql.ResolveParams) (interface{}, error) {
 					if host, ok := p.Source.(types.HostInfo); ok {
@@ -206,7 +206,7 @@ func initTypes() {
 				},
 			},
 			"bootTime": &graphql.Field{
-				Type:        graphql.DateTime,
+				Type:        graphql.NewNonNull(graphql.DateTime),
 				Description: "Host boot time",
 				Resolve: func(p graphql.ResolveParams) (interface{}, error) {
 					if host, ok := p.Source.(types.HostInfo); ok {
@@ -216,7 +216,7 @@ func initTypes() {
 				},
 			},
 			"uptime": &graphql.Field{
-				Type:        graphql.String,
+				Type:        graphql.NewNonNull(graphql.String),
 				Description: "Host uptime",
 				Resolve: func(p graphql.ResolveParams) (interface{}, error) {
 					if host, ok := p.Source.(types.HostInfo); ok {
@@ -226,7 +226,7 @@ func initTypes() {
 				},
 			},
 			"containerized": &graphql.Field{
-				Type:        graphql.Boolean,
+				Type:        graphql.NewNonNull(graphql.Boolean),
 				Description: "Is the process containerized",
 				Resolve: func(p graphql.ResolveParams) (interface{}, error) {
 					if host, ok := p.Source.(types.HostInfo); ok && host.Containerized != nil {
@@ -236,7 +236,7 @@ func initTypes() {
 				},
 			},
 			"hostname": &graphql.Field{
-				Type:        graphql.String,
+				Type:        graphql.NewNonNull(graphql.String),
 				Description: "Hostname",
 				Resolve: func(p graphql.ResolveParams) (interface{}, error) {
 					if host, ok := p.Source.(types.HostInfo); ok {
@@ -256,7 +256,7 @@ func initTypes() {
 				},
 			},
 			"kernelVersion": &graphql.Field{
-				Type:        graphql.String,
+				Type:        graphql.NewNonNull(graphql.String),
 				Description: "Kernel version",
 				Resolve: func(p graphql.ResolveParams) (interface{}, error) {
 					if host, ok := p.Source.(types.HostInfo); ok {
@@ -266,7 +266,7 @@ func initTypes() {
 				},
 			},
 			"macs": &graphql.Field{
-				Type:        graphql.NewList(graphql.String),
+				Type:        graphql.NewNonNull(graphql.NewList(graphql.String)),
 				Description: "List of MAC addresses",
 				Resolve: func(p graphql.ResolveParams) (interface{}, error) {
 					if host, ok := p.Source.(types.HostInfo); ok {
@@ -276,7 +276,7 @@ func initTypes() {
 				},
 			},
 			"os": &graphql.Field{
-				Type:        graphql.String, // Assume osType is defined elsewhere
+				Type:        graphql.NewNonNull(graphql.String),
 				Description: "OS information",
 				Resolve: func(p graphql.ResolveParams) (interface{}, error) {
 					if host, ok := p.Source.(types.HostInfo); ok {
@@ -286,7 +286,7 @@ func initTypes() {
 				},
 			},
 			"timezone": &graphql.Field{
-				Type:        graphql.String,
+				Type:        graphql.NewNonNull(graphql.String),
 				Description: "System timezone",
 				Resolve: func(p graphql.ResolveParams) (interface{}, error) {
 					if host, ok := p.Source.(types.HostInfo); ok {
@@ -296,7 +296,7 @@ func initTypes() {
 				},
 			},
 			"timezoneOffsetSec": &graphql.Field{
-				Type:        graphql.Int,
+				Type:        graphql.NewNonNull(graphql.Int),
 				Description: "Timezone offset (seconds from UTC)",
 				Resolve: func(p graphql.ResolveParams) (interface{}, error) {
 					if host, ok := p.Source.(types.HostInfo); ok {
@@ -306,7 +306,7 @@ func initTypes() {
 				},
 			},
 			"uniqueID": &graphql.Field{
-				Type:        graphql.String,
+				Type:        graphql.NewNonNull(graphql.String),
 				Description: "Unique ID of the host (optional)",
 				Resolve: func(p graphql.ResolveParams) (interface{}, error) {
 					if host, ok := p.Source.(types.HostInfo); ok {
@@ -400,7 +400,7 @@ func initTypes() {
 		Description: "Host network info",
 		Fields: graphql.Fields{
 			"netstat": &graphql.Field{
-				Type:        graphql.String,
+				Type:        graphql.NewNonNull(graphql.String),
 				Description: "Netstat",
 				Args: graphql.FieldConfigArgument{
 					"protocol": &graphql.ArgumentConfig{
@@ -434,7 +434,7 @@ func initTypes() {
 				},
 			},
 			"snmp": &graphql.Field{
-				Type:        graphql.String,
+				Type:        graphql.NewNonNull(graphql.String),
 				Description: "SNMP",
 				Args: graphql.FieldConfigArgument{
 					"protocol": &graphql.ArgumentConfig{
@@ -483,7 +483,7 @@ func initTypes() {
 		Description: "Host OS info",
 		Fields: graphql.Fields{
 			"type": &graphql.Field{
-				Type:        graphql.String,
+				Type:        graphql.NewNonNull(graphql.String),
 				Description: "OS Type (one of linux, macos, unix, windows)",
 				Resolve: func(p graphql.ResolveParams) (interface{}, error) {
 					if os, ok := p.Source.(types.OSInfo); ok {
@@ -493,7 +493,7 @@ func initTypes() {
 				},
 			},
 			"family": &graphql.Field{
-				Type:        graphql.String,
+				Type:        graphql.NewNonNull(graphql.String),
 				Description: "OS Family (e.g. redhat, debian, freebsd, windows)",
 				Resolve: func(p graphql.ResolveParams) (interface{}, error) {
 					if os, ok := p.Source.(types.OSInfo); ok {
@@ -503,7 +503,7 @@ func initTypes() {
 				},
 			},
 			"platform": &graphql.Field{
-				Type:        graphql.String,
+				Type:        graphql.NewNonNull(graphql.String),
 				Description: "OS platform (e.g. centos, ubuntu, windows)",
 				Resolve: func(p graphql.ResolveParams) (interface{}, error) {
 					if os, ok := p.Source.(types.OSInfo); ok {
@@ -513,7 +513,7 @@ func initTypes() {
 				},
 			},
 			"name": &graphql.Field{
-				Type:        graphql.String,
+				Type:        graphql.NewNonNull(graphql.String),
 				Description: "OS Name (e.g. Mac OS X, CentOS)",
 				Resolve: func(p graphql.ResolveParams) (interface{}, error) {
 					if os, ok := p.Source.(types.OSInfo); ok {
@@ -523,7 +523,7 @@ func initTypes() {
 				},
 			},
 			"version": &graphql.Field{
-				Type:        graphql.String,
+				Type:        graphql.NewNonNull(graphql.String),
 				Description: "OS version (e.g. 10.12.6)",
 				Resolve: func(p graphql.ResolveParams) (interface{}, error) {
 					if os, ok := p.Source.(types.OSInfo); ok {
@@ -533,7 +533,7 @@ func initTypes() {
 				},
 			},
 			"major": &graphql.Field{
-				Type:        graphql.String,
+				Type:        graphql.NewNonNull(graphql.String),
 				Description: "Major release version",
 				Resolve: func(p graphql.ResolveParams) (interface{}, error) {
 					if os, ok := p.Source.(types.OSInfo); ok {
@@ -543,7 +543,7 @@ func initTypes() {
 				},
 			},
 			"minor": &graphql.Field{
-				Type:        graphql.String,
+				Type:        graphql.NewNonNull(graphql.String),
 				Description: "Minor release version",
 				Resolve: func(p graphql.ResolveParams) (interface{}, error) {
 					if os, ok := p.Source.(types.OSInfo); ok {
@@ -553,7 +553,7 @@ func initTypes() {
 				},
 			},
 			"patch": &graphql.Field{
-				Type:        graphql.String,
+				Type:        graphql.NewNonNull(graphql.String),
 				Description: "Patch release version",
 				Resolve: func(p graphql.ResolveParams) (interface{}, error) {
 					if os, ok := p.Source.(types.OSInfo); ok {
@@ -563,7 +563,7 @@ func initTypes() {
 				},
 			},
 			"build": &graphql.Field{
-				Type:        graphql.String,
+				Type:        graphql.NewNonNull(graphql.String),
 				Description: "Build (e.g. 16G1114)",
 				Resolve: func(p graphql.ResolveParams) (interface{}, error) {
 					if os, ok := p.Source.(types.OSInfo); ok {
@@ -573,7 +573,7 @@ func initTypes() {
 				},
 			},
 			"codename": &graphql.Field{
-				Type:        graphql.String,
+				Type:        graphql.NewNonNull(graphql.String),
 				Description: "OS codename (e.g. jessie)",
 				Resolve: func(p graphql.ResolveParams) (interface{}, error) {
 					if os, ok := p.Source.(types.OSInfo); ok {
@@ -590,7 +590,7 @@ func initTypes() {
 		Description: "Disk info",
 		Fields: graphql.Fields{
 			"devices": &graphql.Field{
-				Type:        graphql.NewList(graphql.String),
+				Type:        graphql.NewNonNull(graphql.NewList(graphql.String)),
 				Description: "List of devices",
 				Resolve: func(p graphql.ResolveParams) (interface{}, error) {
 					if disk, ok := p.Source.(Disk); ok {
@@ -604,7 +604,7 @@ func initTypes() {
 				},
 			},
 			"fstype": &graphql.Field{
-				Type:        graphql.String,
+				Type:        graphql.NewNonNull(graphql.String),
 				Description: "Filesystem type",
 				Resolve: func(p graphql.ResolveParams) (interface{}, error) {
 					if disk, ok := p.Source.(Disk); ok {
@@ -614,7 +614,7 @@ func initTypes() {
 				},
 			},
 			"mountpoint": &graphql.Field{
-				Type:        graphql.String,
+				Type:        graphql.NewNonNull(graphql.String),
 				Description: "Filesystem type",
 				Resolve: func(p graphql.ResolveParams) (interface{}, error) {
 					if disk, ok := p.Source.(Disk); ok {
@@ -624,7 +624,7 @@ func initTypes() {
 				},
 			},
 			"opts": &graphql.Field{
-				Type:        graphql.String,
+				Type:        graphql.NewNonNull(graphql.String),
 				Description: "Filesystem type",
 				Resolve: func(p graphql.ResolveParams) (interface{}, error) {
 					if disk, ok := p.Source.(Disk); ok {
@@ -634,7 +634,7 @@ func initTypes() {
 				},
 			},
 			"total": &graphql.Field{
-				Type:        graphql.String,
+				Type:        graphql.NewNonNull(graphql.String),
 				Description: "Total storage space",
 				Resolve: func(p graphql.ResolveParams) (interface{}, error) {
 					if disk, ok := p.Source.(Disk); ok {
@@ -644,7 +644,7 @@ func initTypes() {
 				},
 			},
 			"free": &graphql.Field{
-				Type:        graphql.String,
+				Type:        graphql.NewNonNull(graphql.String),
 				Description: "Free storage space",
 				Resolve: func(p graphql.ResolveParams) (interface{}, error) {
 					if disk, ok := p.Source.(Disk); ok {
@@ -654,7 +654,7 @@ func initTypes() {
 				},
 			},
 			"used": &graphql.Field{
-				Type:        graphql.String,
+				Type:        graphql.NewNonNull(graphql.String),
 				Description: "Used storage space",
 				Args: graphql.FieldConfigArgument{
 					"mode": &graphql.ArgumentConfig{
@@ -674,7 +674,7 @@ func initTypes() {
 				},
 			},
 			"inodestotal": &graphql.Field{
-				Type:        graphql.String,
+				Type:        graphql.NewNonNull(graphql.String),
 				Description: "Total inodes",
 				Resolve: func(p graphql.ResolveParams) (interface{}, error) {
 					if disk, ok := p.Source.(Disk); ok {
@@ -684,7 +684,7 @@ func initTypes() {
 				},
 			},
 			"inodesused": &graphql.Field{
-				Type:        graphql.String,
+				Type:        graphql.NewNonNull(graphql.String),
 				Description: "Used inodes",
 				Args: graphql.FieldConfigArgument{
 					"mode": &graphql.ArgumentConfig{
@@ -704,7 +704,7 @@ func initTypes() {
 				},
 			},
 			"inodesfree": &graphql.Field{
-				Type:        graphql.String,
+				Type:        graphql.NewNonNull(graphql.String),
 				Description: "Free inodes",
 				Resolve: func(p graphql.ResolveParams) (interface{}, error) {
 					if disk, ok := p.Source.(Disk); ok {

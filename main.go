@@ -2,6 +2,7 @@ package main
 
 import (
 	"encoding/json"
+	"fmt"
 	"net/http"
 
 	"github.com/davidjosearaujo/gometric/metrics"
@@ -11,7 +12,7 @@ import (
 func main() {
 
 	mux := http.NewServeMux()
-	mux.HandleFunc("/graphql", func(w http.ResponseWriter, r *http.Request) {
+	mux.HandleFunc("/gometric", func(w http.ResponseWriter, r *http.Request) {
 		query := r.URL.Query().Get("query")
 		result := graphql.Do(graphql.Params{
 			Schema:        metrics.MetricsSchema,
@@ -24,6 +25,8 @@ func main() {
 		Addr:    ":7000",
 		Handler: mux,
 	}
+
+	fmt.Println("Gometric server running at: http://localhost:7000/gometric")
 
 	server.ListenAndServe()
 }

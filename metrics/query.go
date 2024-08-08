@@ -83,7 +83,6 @@ func initQuery() {
 					return network, nil
 				},
 			},
-			// TODO
 			"disk": &graphql.Field{
 				Type: diskType,
 				Args: graphql.FieldConfigArgument{
